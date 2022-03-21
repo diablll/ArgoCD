@@ -1,12 +1,10 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.8-slim-buster
-
-WORKDIR /app
-
-COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
-
-COPY . .
-
-CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+#Download ubuntu from docker hub
+FROM ubuntu:latest
+# Create a folder inside the home folder in bthe downloaded image
+RUN mkdir -p /home/HelloWorld
+# Copy the executable fromn this folder to the folder inside the image
+COPY . /home/HelloWorld
+# Run the application inside the image
+CMD /home/HelloWorld/Hello
