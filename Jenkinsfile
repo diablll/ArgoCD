@@ -2,7 +2,7 @@ node{
     def buildnumber=BUILD_NUMBER
     def mavenHome = tool name: 'maven3.8.5'
     stage('SCM Clone') {
-        git credentialsID: 'github' ,url: 'https://github.com/diablll/spring-boot-docker'
+        git credentialsID: 'github' ,url: 'https://github.com/diablll/ArgoCD.git'
     }
     stage('MavenBuild') {
         sh "${mavenHome}/bin/mvn clean package"
@@ -19,6 +19,6 @@ sh "docker push bajod/spring"
 }
    stage('Trigger ManifestUpdate') {
                 echo "triggering updatemanifestjob"
-                build job: "updatemanifest2", parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+                build job: "updatemanifest", parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
    }
 }
