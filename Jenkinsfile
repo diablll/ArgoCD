@@ -4,9 +4,9 @@ tools{
 maven "maven3.8.5"
 }
 stages{
-stage("Git clone")
-steps{
-git branch: "master", url: 'https
+    stage("Git clone") {
+        
+        checkout scm
 }
 stage("Test+Build")
 steps{
