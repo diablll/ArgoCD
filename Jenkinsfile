@@ -1,32 +1,24 @@
-pipeline{
-def buildnumber=BUILD_NUMBER
-tools{
-maven "maven3.8.5"
-}
-stages{
-    stage("Git clone") {
-        
-        checkout scm
-}
-stage("Test+Build")
-steps{
-sh "echo running UnitTesting"
-sh "mvn clean package"
-}
-stage("Build Docker Image")
-steps{
-sh "docker build -t bajod/helloworld:${buildnumber}"
+node{
+    def buildnumber=BUILD_NUMBER
+    def mavenHome = tool name: 'maven3.8.5'
+    stage('SCM Clone') {
+        git credentialsID: 'github' ,url: 'https://github.com/diablll/spring-boot-docker'
+    }
+    stage('MavenBuild') {
+        sh "${mavenHome}/bin/mvn clean package"
+    }
+    stage('BuildDockerImage'){
+        sh "docker build -t bajod/spring:${buildnumber} ."
+    }
+    stage("Docker Push"){
+withCredentials([string(credentialsId: 'DockerHubCredentials', variable: 'DockerHubCredentials')]) {
+ sh "docker login -u bajod -p ${DockerHubCredentials}"
 }
 
-    stage('Push image') {
-        
-        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-            docker.push("${env.BUILD_NUMBER}")
-        }
-    }
-    stage('Trigger ManifestUpdate') {
-                echo "triggering updatemanifestjob"
-                build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
-        }
+sh "docker push bajod/spring"
 }
+   stage('Trigger ManifestUpdate') {
+                echo "triggering updatemanifestjob"
+                build job: "updatemanifest2", parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+   }
 }
