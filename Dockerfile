@@ -1,10 +1,13 @@
-# syntax=docker/dockerfile:1
+FROM openjdk:8-alpine
 
-#Download ubuntu from docker hub
-FROM ubuntu:latest
-# Create a folder inside the home folder in bthe downloaded image
-RUN mkdir -p /home/HelloWorld
-# Copy the executable fromn this folder to the folder inside the image
-COPY . /home/HelloWorld
-# Run the application inside the image
-CMD /home/HelloWorld/Hello
+# Required for starting application up.
+RUN apk update && apk add /bin/sh
+
+RUN mkdir -p /opt/app
+ENV PROJECT_HOME /opt/app
+
+COPY target/spring-boot-mongo-1.0.jar $PROJECT_HOME/spring-boot-mongo.jar
+
+WORKDIR $PROJECT_HOME
+EXPOSE 8080
+CMD ["java" ,"-jar","./spring-boot-mongo.jar"]
