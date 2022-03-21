@@ -17,13 +17,13 @@ stage("Build Docker Image")
 steps{
 sh "docker build -t bajod/helloworld:${buildnumber}"
 }
-stage("Docker Push")
-steps{
-generated syntax script
-sh "docker login -u bajod -p ${Dockerhub}
-sh "docker push bajod/helloworld:${buildnumber}"
-}
-}
+
+    stage('Push image') {
+        
+        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+            docker.push("${env.BUILD_NUMBER}")
+        }
+    }
     stage('Trigger ManifestUpdate') {
                 echo "triggering updatemanifestjob"
                 build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
