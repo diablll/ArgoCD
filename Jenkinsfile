@@ -16,11 +16,10 @@ withCredentials([string(credentialsId: 'DockerHubCredentials', variable: 'Docker
  sh "docker login -u bajod -p ${DockerHubCredentials}"
 }
 
-sh "docker push bajod/spring"
+sh "docker push bajod/spring:${buildnumber}"
 }
    stage('Trigger ManifestUpdate') {
                 echo "triggering updatemanifestjob"
                 build job: "updatemanifest", parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
    }
-}
 
