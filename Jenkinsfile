@@ -1,6 +1,7 @@
 pipeline{
     def buildnumber=BUILD_NUMBER
     def mavenHome = tool name: 'maven3.8.5'
+}
     stage('SCM Clone') {
         git credentialsID: 'github', url: 'https://github.com/diablll/ArgoCD.git'
     }
