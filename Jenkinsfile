@@ -1,5 +1,5 @@
 node{
-    def buildnumber = BUILD_NUMBER
+    def buildnumber=BUILD_NUMBER
     def mavenHome = tool name: 'maven3.8.5'
 }
     stage('SCM Clone') {
