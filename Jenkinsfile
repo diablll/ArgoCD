@@ -2,11 +2,19 @@ node{
     def buildnumber = BUILD_NUMBER
     def mavenHome = tool name: 'maven3.8.5'
     stage('SCM Clone') {
-        git credentialsID: 'github', url: 'https://github.com/diablll/ArgoCD.git'
+    git url: 'https://github.com/diablll/ArgoCD.git'
     }
     stage('MavenBuild') {
         sh "${mavenHome}/bin/mvn clean package"
     }
+stage('CodeQualityReport') {
+sh "echo running CodeQuality analysis"
+//sh "mvn sonar:sonar"
+}
+stage('UploadArtifacts') {
+sh "echo uploading artifacts in nexus"
+//sh "mvn deploy"
+ }
     stage('BuildDockerImage'){
         sh "docker build -t bajod/spring:${buildnumber} ."
     }
