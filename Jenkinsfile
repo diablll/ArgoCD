@@ -2,7 +2,7 @@ node{
     def buildnumber = BUILD_NUMBER
     def mavenHome = tool name: 'maven3.8.5'
     stage('SCM Clone') {
-    url: 'https://github.com/diablll/spring-boot-docker.git'
+    git url: 'https://github.com/diablll/ArgoCD.git'
     }
     stage('MavenBuild') {
         sh "${mavenHome}/bin/mvn clean package"
